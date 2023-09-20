@@ -63,46 +63,48 @@ products.forEach((product) =>{
 document.querySelector('.products-list-grid').innerHTML = productsHTML;
 
 
+function updateCartQuantity(){
+    let cartQuantity = 0;
+
+    cart.forEach((item) => {
+        cartQuantity += item.quantity;
+    });
+
+    document.querySelector(".added-cart-quantity")
+    .innerHTML = cartQuantity;
+}
+
+function addToCart(productId){
+    let matchingItem;
+
+    cart.forEach((item) => {
+        if (productId === item.productId){
+            matchingItem = item;
+        }
+    });
+
+    const quantitySelector = document.querySelector(`.quantity-selector-${productId}`);
+    
+    const quantity = Number(quantitySelector.value);
+
+    if(matchingItem){
+        matchingItem.quantity += quantity;
+    } 
+    else{
+        cart.push({
+            productId: productId,
+            quantity: quantity
+        });
+    }
+}
+
 document.querySelectorAll('.add-to-cart').forEach((button) => {
     button.addEventListener('click', () => {
-        const productId = button.dataset.productId;
-        
-        let matchingItem;
 
-        cart.forEach((item) => {
-            if (productId == item.productId){
-                matchingItem = item;
-            }
-        });
+    const productId = button.dataset.productId;
+    addToCart(productId);
+    updateCartQuantity();
 
-        const quantitySelector = document.querySelector(`.quantity-selector-${productId}`);
-        
-        const quantity = Number(quantitySelector.value);
-
-        // console.log(quantity);
-
-        if(matchingItem){
-            matchingItem.quantity += quantity;
-        }
-
-        else{
-            cart.push({
-                productId: productId,
-                quantity: quantity
-            });
-        
-            let cartQuantity = 0;
-
-            cart.forEach((item) => {
-                cartQuantity += item.quantity;
-            });
-
-            document.querySelector(".added-cart-quantity")
-            .innerHTML = cartQuantity;
-
-            // console.log(cartQuantity);
-        }
-        // console.log(cart);
     });
 
 });
